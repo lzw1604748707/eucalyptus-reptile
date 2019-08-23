@@ -17,6 +17,11 @@ export default new Router({
           path: '/',
           name: 'sourceBoard',
           component: () => import('./views/sourceBoard/index.vue')
+        },
+        {
+          path: '/zolwallpaper',
+          name: 'zolWallpaper',
+          component: () => import('./views/zolWallpaper/index.vue')
         }
       ]
     }

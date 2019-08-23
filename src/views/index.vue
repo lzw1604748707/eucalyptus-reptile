@@ -16,13 +16,28 @@ import sidePar from '@/components/sidePar.vue'
   components: {topPar, sidePar}
 })
 export default class Index extends Vue {
-  private drawer: boolean = false
+  private drawer: boolean = true
   private items: Array<Object> = [
-    {id: '1', icon: 'contacts', text: 'Source Board'},
-    {id: '2', icon: 'mdi-alpha-z-box-outline', text: 'ZOL桌面壁纸'},
-    {id: '3', icon: 'settings', text: 'Settings'},
-    {id: '4', icon: 'chat_bubble', text: 'Send feedback'},
-    {id: '5', icon: 'help', text: 'Help'}
+    {
+      id: '1',
+      icon: 'contacts',
+      text: 'Source Board',
+      routerName: 'sourceBoard'
+    },
+    {
+      id: '2',
+      icon: 'mdi-alpha-z-box-outline',
+      text: 'ZOL桌面壁纸',
+      routerName: 'zolWallpaper'
+    },
+    {id: '3', icon: 'settings', text: 'Settings', routerName: 'settings'},
+    {
+      id: '4',
+      icon: 'chat_bubble',
+      text: 'Send feedback',
+      routerName: 'sourceBoard'
+    },
+    {id: '5', icon: 'help', text: 'Help', routerName: 'sourceBoard'}
   ]
 }
 </script>

@@ -1,40 +1,50 @@
 <template>
-  <v-container class="grey lighten-5">
-    <v-row>
-      <v-col xs="12" sm="6" md="4" lg="3" v-for="i of 16" :key="i">
-        <v-card>
-          <v-img class="white--text" height="200px" :src="collection.cover">
-            <div class="align-end fill-height" style="display:flex; ">
-              <v-chip class="ma-2" color="indigo" text-color="white">
-                <v-avatar left>
-                  <v-icon>account_circle</v-icon>
-                </v-avatar>
-                {{ collection.author }}
-              </v-chip>
-              <v-spacer></v-spacer>
-              <v-chip class="ma-2" color="#75757560" label text-color="white">
-                {{ collection.uploadDate }}
-              </v-chip>
-            </div>
-          </v-img>
-          <v-card-title>
-            {{ collection.title }}
-          </v-card-title>
-          <v-card-text>
-            <v-spacer></v-spacer>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn text color="orange">
-              分享
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn text color="orange">
-              下载
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
+  <v-container class="grey lighten-5 fill-height">
+    <v-card class="mx-auto" color="#F9F9F9" max-width="400">
+      <v-list-item two-line>
+        <v-list-item-content>
+          <v-list-item-title class="headline">San Francisco</v-list-item-title>
+          <v-list-item-subtitle
+            >Mon, 12:30 PM, Mostly sunny</v-list-item-subtitle
+          >
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-card-text>
+        <v-row align="center">
+          <v-col class="display-3" cols="6">
+            23&deg;C
+          </v-col>
+          <v-col cols="6">
+            <v-img
+              src="https://cdn.vuetifyjs.com/images/cards/sun.png"
+              alt="Sunny image"
+              width="92"
+            ></v-img>
+          </v-col>
+        </v-row>
+      </v-card-text>
+
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon>mdi-send</v-icon>
+        </v-list-item-icon>
+        <v-list-item-subtitle>23 km/h</v-list-item-subtitle>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon>mdi-cloud-download</v-icon>
+        </v-list-item-icon>
+        <v-list-item-subtitle>48%</v-list-item-subtitle>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-card-actions>
+        <v-btn text>Full Report</v-btn>
+      </v-card-actions>
+    </v-card>
   </v-container>
 </template>
 
@@ -42,16 +52,7 @@
 import {Component, Vue} from 'vue-property-decorator'
 
 @Component
-export default class extends Vue {
-  private collection: object = {
-    title: '抽象设计色彩宽屏桌面壁纸',
-    author: 'spance',
-    uploadDate: '1998-08-25',
-    cover: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'
-  }
-  reFindZOLWallpager() {}
-  mounted() {}
-}
+export default class extends Vue {}
 </script>
 
 <style lang="scss" scoped>

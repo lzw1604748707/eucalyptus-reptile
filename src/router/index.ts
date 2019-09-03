@@ -11,24 +11,24 @@ export default new Router({
       path: '/',
       name: 'home',
       redirect: 'sourceBoard',
-      component: () => import('./views/index.vue'),
+      component: () => import('@/views/index.vue'),
       children: [
         {
           path: '/sourceboard',
           name: 'sourceBoard',
-          component: () => import('./views/sourceBoard/index.vue')
+          component: () => import('@/views/sourceBoard/index.vue')
         },
         {
           path: '/zolwallpaper',
           name: 'zolWallpaper',
-          component: () => import('./views/zolWallpaper/index.vue')
+          component: () => import('@/views/zolWallpaper/index.vue')
         }
       ]
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('./views/login/index.vue')
+      component: () => import('@/views/login/index.vue')
     }
   ]
 })

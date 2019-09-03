@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuex, {Commit, StoreOptions} from 'vuex'
+import Vuex, {StoreOptions} from 'vuex'
 Vue.use(Vuex)
 
 interface BaseState {

@@ -14,7 +14,7 @@ export default new Router({
       component: () => import('./views/index.vue'),
       children: [
         {
-          path: '/',
+          path: '/sourceboard',
           name: 'sourceBoard',
           component: () => import('./views/sourceBoard/index.vue')
         },
@@ -24,6 +24,11 @@ export default new Router({
           component: () => import('./views/zolWallpaper/index.vue')
         }
       ]
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('./views/login/index.vue')
     }
   ]
 })

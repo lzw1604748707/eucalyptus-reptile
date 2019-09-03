@@ -1,24 +1,25 @@
 <template>
   <v-container class="grey lighten-5">
     <v-row>
-      <v-col xs="12" sm="6" md="4" lg="3" v-for="i of 16" :key="i">
+      <v-col xs="12"
+        sm="6"
+        md="4"
+        lg="3"
+        v-for="i of 16"
+        :key="i">
         <collectionCard :item="collection">
-          <div
-            class="card__title--line"
-            @click="onShowCollectionDetail(collection)"
-          >
+          <div class="card__title--line"
+            @click="onShowCollectionDetail(collection)">
             {{ collection.title || '' }}
           </div>
           <template slot="actions">
-            <v-btn
-              text
+            <v-btn text
               color="orange"
-              @click="onShowShareDialogClick(collection)"
-              >分享</v-btn
-            >
+              @click="onShowShareDialogClick(collection)">分享</v-btn>
             <v-spacer></v-spacer>
-            <v-btn text color="orange" @click="onDownloadClick(collection)"
-              >下载
+            <v-btn text
+              color="orange"
+              @click="onDownloadClick(collection)">下载
             </v-btn>
           </template>
         </collectionCard>
@@ -36,7 +37,7 @@ import {Component, Vue} from 'vue-property-decorator'
     collectionCard
   }
 })
-export default class extends Vue {
+export default class Zol extends Vue {
   private collection: object = {
     title: '抽象设计色彩宽屏桌面壁纸',
     author: 'spance',
@@ -59,8 +60,13 @@ export default class extends Vue {
     console.log('下载')
   }
   reFindZOLWallpager() {
-    console.log('加载照片集列表')
+    this.$callApi({
+      api: 'Zol/CollectionList'
+    }).then((data: any) => {
+      console.log(data)
+    })
   }
+
   mounted() {
     this.reFindZOLWallpager()
   }

@@ -4,13 +4,17 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build ",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "analyzer": "vue-cli-service build --report"
   },
   "dependencies": {
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
+    "js-cookie": "^2.2.1",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
@@ -41,6 +45,7 @@
     "typescript": "^3.4.3",
     "vue-cli-plugin-vuetify": "^0.6.3",
     "vue-template-compiler": "^2.6.10",
-    "vuetify-loader": "^1.2.2"
+    "vuetify-loader": "^1.2.2",
+    "webpack-bundle-analyzer": "^3.4.1"
   }
 }

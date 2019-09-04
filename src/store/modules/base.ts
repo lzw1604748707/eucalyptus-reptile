@@ -1,19 +1,22 @@
 import Vue from 'vue'
-import Vuex, {StoreOptions} from 'vuex'
+import Vuex, {Module} from 'vuex'
 Vue.use(Vuex)
-
+import store from '../index'
+import {SET_USER_TOKEN} from '../mutation-types'
+import {rootState} from '../index'
 interface BaseState {
-  menuList: []
+  token: string
 }
 
-const base: StoreOptions<BaseState> = {
+const base: Module<BaseState, rootState> = {
+  namespaced: true,
   state: {
-    menuList: []
+    token: 'I-am-token-of-state'
   },
   getters: {},
   mutations: {
-    updateMenuList(state: any, menuList: []) {
-      state.menuList = menuList
+    [SET_USER_TOKEN](state: BaseState, token: string) {
+      state.token = token
     }
   },
   actions: {}

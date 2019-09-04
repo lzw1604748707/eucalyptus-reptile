@@ -711,6 +711,11 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
+"@mdi/js@^4.2.95":
+  version "4.2.95"
+  resolved "https://registry.npm.taobao.org/@mdi/js/download/@mdi/js-4.2.95.tgz#c920083f64873fe6cd721b15c23061c71d47811d"
+  integrity sha1-ySAIP2SHP+bNchsVwjBhxx1HgR0=
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npm.taobao.org/@mrmlnc/readdir-enhanced/download/@mrmlnc/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -9082,6 +9087,11 @@ vuetify@^2.0.0:
   version "2.0.11"
   resolved "https://registry.npm.taobao.org/vuetify/download/vuetify-2.0.11.tgz#4679d6d37e4594daec930b28f1bc7083bcc76ca6"
   integrity sha1-RnnW035FlNrskwso8bxwg7zHbKY=
+
+vuex-class@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.npm.taobao.org/vuex-class/download/vuex-class-0.3.2.tgz#c7e96a076c1682137d4d23a8dcfdc63f220e17a8"
+  integrity sha1-x+lqB2wWghN9TSOo3P3GPyIOF6g=
 
 vuex@^3.0.1:
   version "3.1.1"

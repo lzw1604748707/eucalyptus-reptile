@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
 // modules
-import user from './modules/user'
-
+import base from './modules/base'
 Vue.use(Vuex)
-
-const store = new Vuex.Store({
-  state: {
+export interface rootState {
+  [key: string]: any
+}
+export default new Vuex.Store({
+  state: () => {
+    const initState: rootState = {}
+    return initState
     //
   },
   mutations: {
@@ -17,7 +19,6 @@ const store = new Vuex.Store({
     //
   },
   modules: {
-    user
+    base
   }
 })
-export default store

@@ -1,9 +1,5 @@
 <template>
-  <filterTabbar
-    :tabList="tabList"
-    :tabValue="tabValue"
-    @tab-change="onTabChange"
-  >
+  <filterTabbar :tabList="tabList" @tab-change="onTabChange">
     <v-text-field
       height="35"
       label="搜索"
@@ -14,27 +10,37 @@
       class="no-verify"
       height="35"
       label="壁纸分类"
-      :items="components"
+      :items="styleTypeList"
       clearable
       solo
+      @change="onStyleTypeChange"
     ></v-autocomplete>
     <v-autocomplete
       class="mx-sm-3 no-verify"
       height="35"
       label="壁纸尺寸"
-      :items="components"
+      :items="pixelRatioList"
       clearable
       solo
+      @change="onPixelRatioChange"
     ></v-autocomplete>
     <v-autocomplete
       class="no-verify"
       height="35"
       label="壁纸色系"
-      :items="colorList"
+      :items="colorTypeList"
       clearable
       solo
-      v-model="currentColorSystem"
+      @change="onColorTypeChange"
     >
+      <template v-slot:item="data">
+        <v-list-item-icon>
+          <v-icon :color="data.item.color">fiber_manual_record</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>{{ data.item.text }}</v-list-item-title>
+        </v-list-item-content>
+      </template>
       <template slot="prepend-inner">
         <v-icon :color="currentColorSystem">mdi-palette</v-icon>
       </template>
@@ -43,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop} from 'vue-property-decorator'
+import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
 import filterTabbar from '@/components/filterTabbar.vue'
 @Component({
   components: {
@@ -51,30 +57,61 @@ import filterTabbar from '@/components/filterTabbar.vue'
   }
 })
 export default class extends Vue {
-  @Prop({}) tabValue!: number
+  @Prop({}) tabValue!: string
   private tabList: any[] = []
-  private components: any[] = [
-    'Autocompletes',
-    'Comboboxes',
-    'Forms',
-    'Inputs',
-    'Overflow Buttons',
-    'Selects',
-    'Selection Controls',
-    'Sliders',
-    'Textareas',
-    'Text Fields'
-  ]
-  private colorList: any[] = [
-    {
-      text: '红色',
-      value: 'red'
-    },
-    {text: '蓝色', value: 'blue'}
-  ]
+  private styleTypeList: any[] = []
+  private pixelRatioList: any[] = []
+  private colorTypeList: any[] = []
+
   private currentColorSystem: string = ''
+
   onTabChange(currentTabIndex: number) {
     this.$emit('tabChange', this.tabList[currentTabIndex].value)
+  }
+  onStyleTypeChange(currentStyleType: string) {
+    this.$emit('styleChange', currentStyleType)
+  }
+  onColorTypeChange(currentcolor: string) {
+    this.currentColorSystem = this.colorTypeList.find(
+      color => color.value === currentcolor
+    ).color
+    this.$emit('colorChange', currentcolor)
+  }
+  onPixelRatioChange(currentPixelRatio: string) {
+    this.$emit('pixelRatioChange', currentPixelRatio)
+  }
+  reFindStyleTypeList() {
+    this.$callApi({
+      api: 'zol/styleTypeList',
+      param: {
+        model: this.tabValue
+      }
+    }).then((styleTypeList: any[]) => {
+      this.styleTypeList = styleTypeList
+      this.styleTypeList.unshift({text: '全部', value: ''})
+    })
+  }
+  reFindColorTypeList() {
+    this.$callApi({
+      api: 'zol/colorTypeList',
+      param: {
+        model: this.tabValue
+      }
+    }).then((colorTypeList: any[]) => {
+      this.colorTypeList = colorTypeList
+      this.colorTypeList.unshift({text: '全部', value: '', color: 'cyan'})
+    })
+  }
+  reFindPixelRedioList() {
+    this.$callApi({
+      api: 'zol/pixelRatioList',
+      param: {
+        model: this.tabValue
+      }
+    }).then((pixelRatioList: any[]) => {
+      this.pixelRatioList = pixelRatioList
+      this.pixelRatioList.unshift({text: '全部', value: ''})
+    })
   }
   reFindTabList() {
     this.$callApi({
@@ -86,6 +123,14 @@ export default class extends Vue {
   }
   mounted() {
     this.reFindTabList()
+  }
+
+  @Watch('tabValue', {immediate: true})
+  watchTabValue(val: string) {
+    console.log('触发改变')
+    this.reFindStyleTypeList()
+    this.reFindPixelRedioList()
+    this.reFindColorTypeList()
   }
 }
 </script>

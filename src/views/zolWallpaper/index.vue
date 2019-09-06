@@ -5,7 +5,14 @@
     :isLoading="isLoading"
     @loading="onLoading"
   >
-    <headerPanel @tabChange="onTabChange"></headerPanel>
+    <headerPanel
+      :tabValue="currentTabValue"
+      @tabChange="onTabChange"
+      @styleChange="onStyleChange"
+      @colorChange="onColorChange"
+      @pixelRatioChange="onPixelRatioChange"
+    >
+    </headerPanel>
     <v-container class="grey lighten-5 pt-0">
       <v-row>
         <v-col
@@ -64,6 +71,9 @@ export default class Zol extends Vue {
   @State(state => state.base.token) token: any
 
   private currentTabValue: string = 'p1'
+  private currentStyleTypeValue: string = ''
+  private currentColorTypeValue: string = ''
+  private currentPixelRatioValue: string = ''
 
   private isFinished: boolean = false
   private isLoading: boolean = false
@@ -75,9 +85,19 @@ export default class Zol extends Vue {
 
   onTabChange(currentTabValue: string) {
     this.currentTabValue = currentTabValue
-    this.page.goFirstPage()
-    this.collectionList = []
-    this.reFindZOLWallpagerList()
+    this.initData()
+  }
+  onStyleChange(currentStyleTypeValue: string) {
+    this.currentStyleTypeValue = currentStyleTypeValue
+    this.initData()
+  }
+  onColorChange(currentColorTypeValue: string) {
+    this.currentColorTypeValue = currentColorTypeValue
+    this.initData()
+  }
+  onPixelRatioChange(currentPixelRatioValue: string) {
+    this.currentPixelRatioValue = currentPixelRatioValue
+    this.initData()
   }
 
   onShowCollectionDetail(collection: object) {
@@ -101,9 +121,9 @@ export default class Zol extends Vue {
     this.$callApi({
       api: 'zol/collectionList',
       param: {
-        styleType: '',
-        colorType: '',
-        pixelRatio: '',
+        styleType: this.currentStyleTypeValue,
+        colorType: this.currentColorTypeValue,
+        pixelRatio: this.currentPixelRatioValue,
         model: this.currentTabValue,
         pageIndex: this.page.pageIndex,
         pageSize: this.page.pageSize
@@ -115,10 +135,14 @@ export default class Zol extends Vue {
       this.isFinished = this.page.isLastPage()
     })
   }
-
+  initData() {
+    this.page.goFirstPage()
+    this.collectionList = []
+    this.reFindZOLWallpagerList()
+  }
   mounted() {
     console.log('token', this.token)
-    this.reFindZOLWallpagerList()
+    this.initData()
   }
 }
 </script>

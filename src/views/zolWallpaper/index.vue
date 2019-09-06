@@ -1,30 +1,38 @@
 <template>
-  <euInfiniteScroll class="overflow-y-auto zol__container"
-    :finished="true"
-    @loading="onLoading">
-    <v-container class="grey lighten-5">
-
+  <euInfiniteScroll
+    class="overflow-y-auto zol__container"
+    :finished="isFinished"
+    :isLoading="isLoading"
+    @loading="onLoading"
+  >
+    <headerPanel @tabChange="onTabChange"></headerPanel>
+    <v-container class="grey lighten-5 pt-0">
       <v-row>
-        <v-col xs="12"
+        <v-col
+          xs="12"
           sm="6"
           md="4"
           lg="3"
           v-for="(collection, index) of collectionList"
-          :key="index">
-          <collectionCard :item="collection"
-            class="content__card">
-            <div class="card__title--line"
-              @click="onShowCollectionDetail(collection)">
+          :key="index"
+        >
+          <collectionCard :item="collection" class="content__card">
+            <div
+              class="card__title--line"
+              @click="onShowCollectionDetail(collection)"
+            >
               {{ collection.title || '' }}
             </div>
             <template slot="actions">
-              <v-btn text
+              <v-btn
+                text
                 color="orange"
-                @click="onShowShareDialogClick(collection)">分享</v-btn>
+                @click="onShowShareDialogClick(collection)"
+                >分享</v-btn
+              >
               <v-spacer></v-spacer>
-              <v-btn text
-                color="orange"
-                @click="onDownloadClick(collection)">下载
+              <v-btn text color="orange" @click="onDownloadClick(collection)"
+                >下载
               </v-btn>
             </template>
           </collectionCard>
@@ -36,27 +44,41 @@
 
 <script lang="ts">
 import collectionCard from '@/components/collectionCard.vue'
+import headerPanel from './components/headerPanel.vue'
 import {Component, Vue} from 'vue-property-decorator'
 import {State, Getter, Action, Mutation, namespace} from 'vuex-class'
+import Page from '@/helper/Page'
+
+interface collectionListMap {
+  collectionList: any[]
+  total: number
+}
 
 @Component({
   components: {
-    collectionCard
+    collectionCard,
+    headerPanel
   }
 })
 export default class Zol extends Vue {
   @State(state => state.base.token) token: any
-  private collectionList: object = [
-    {
-      title: '抽象设计色彩宽屏桌面壁纸',
-      author: 'spance',
-      createDate: '1998-08-25',
-      cover: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'
-    }
-  ]
+
+  private currentTabValue: string = 'p1'
+
+  private isFinished: boolean = false
+  private isLoading: boolean = false
+  private collectionList: Array<any> = []
+  private page: Page = new Page(1, 21, 0)
+
   private currentExpandCollection: object = {}
   private isShowCollectionDetail: boolean = false
-  private page: object = {}
+
+  onTabChange(currentTabValue: string) {
+    this.currentTabValue = currentTabValue
+    this.page.goFirstPage()
+    this.collectionList = []
+    this.reFindZOLWallpagerList()
+  }
 
   onShowCollectionDetail(collection: object) {
     this.isShowCollectionDetail = true
@@ -71,16 +93,26 @@ export default class Zol extends Vue {
     console.log('下载')
   }
   onLoading() {
-    console.log('滚动加载')
+    this.isLoading = true
+    this.page.nextPage()
+    this.reFindZOLWallpagerList()
   }
   reFindZOLWallpagerList() {
     this.$callApi({
-      api: 'Zol/CollectionList',
+      api: 'zol/collectionList',
       param: {
-        pageIndex: ''
+        styleType: '',
+        colorType: '',
+        pixelRatio: '',
+        model: this.currentTabValue,
+        pageIndex: this.page.pageIndex,
+        pageSize: this.page.pageSize
       }
-    }).then((data: any) => {
-      this.collectionList = data
+    }).then(({collectionList = [], total = 0}: collectionListMap) => {
+      this.isLoading = false
+      this.collectionList = [...this.collectionList, ...collectionList]
+      this.page.pageTotal = total
+      this.isFinished = this.page.isLastPage()
     })
   }
 
@@ -90,7 +122,6 @@ export default class Zol extends Vue {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .zol__container {
   width: inherit;

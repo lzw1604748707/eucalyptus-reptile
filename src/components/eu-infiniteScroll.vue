@@ -1,10 +1,16 @@
 <template>
-  <div id="eu-infiniteScroll"
-    v-scroll:#eu-infiniteScroll="onScroll">
+  <div id="eu-infinite-scroll" v-scroll:#eu-infinite-scroll="onScroll">
     <slot></slot>
-    <v-sheet class="text-center"
-      v-if="finished"
-      color="blue lighten-4">In the end</v-sheet>
+    <div class="infinite-scroll__progress">
+      <v-progress-circular
+        v-if="isLoading"
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
+    </div>
+    <v-sheet class="text-center" v-if="finished" dark color="blue darken-3"
+      >In the end</v-sheet
+    >
   </div>
 </template>
 
@@ -14,9 +20,10 @@ import {Component, Vue, Prop} from 'vue-property-decorator'
 @Component
 export default class extends Vue {
   @Prop({default: 5}) offset!: number
+  @Prop({default: false}) isLoading!: boolean
   @Prop({default: false}) finished!: boolean
   onScroll(e: any) {
-    if (this.finished) return
+    if (this.finished || this.isLoading) return
     let bottomDistance =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight
     if (this.offset >= bottomDistance) {
@@ -27,4 +34,9 @@ export default class extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.infinite-scroll__progress {
+  widows: inherit;
+  height: 50px;
+  text-align: center;
+}
 </style>

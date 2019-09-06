@@ -5,6 +5,7 @@
 import axios, {AxiosRequestConfig, AxiosPromise, AxiosInstance} from 'axios'
 import router from '../router'
 import store from '@/store'
+const qs = require('qs')
 
 /**
  * 根据运行环境
@@ -135,15 +136,17 @@ function addInterceptors(instance: AxiosInstance) {
  */
 const callApi = ({
   api,
-  method = 'get',
+  method = 'post',
   param,
   config = {}
 }: ApiRequestConfig): AxiosPromise => {
   const $ = axios.create(Object.assign(config))
   addInterceptors($)
   const requestData = ['post', 'put', 'patch'].includes(method!)
-    ? {data: param}
+    ? {data: qs.stringify(param)}
     : {params: param}
+  console.log(requestData)
+
   return $({url: api, method, ...requestData})
 }
 

@@ -1,0 +1,27 @@
+::v-deep.v-text-field.v-text-field--solo .v-input__control,
+::v-deep .v-text-field--outlined > .v-input__control > .v-input__slot {
+  min-height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  & input {
+    padding: 0;
+  }
+  & .v-input__append-inner {
+    margin-top: auto;
+  }
+  & .v-label {
+    top: auto;
+  }
+  & .v-label--active {
+    top: -8px;
+    transform: translateY(0) scale(0.75);
+  }
+}
+.no-verify {
+  ::v-deep .v-input__slot {
+    margin-bottom: 15px;
+  }
+  ::v-deep .v-text-field__details {
+    display: none;
+  }
+}

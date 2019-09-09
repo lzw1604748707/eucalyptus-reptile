@@ -4,7 +4,7 @@
       class="white--text"
       height="200px"
       style="flex:none;"
-      :src="item.cover"
+      v-lazy="item.cover"
     >
       <div class="align-end fill-height" style="display:flex; ">
         <v-chip class="ma-2" color="indigo" text-color="white">

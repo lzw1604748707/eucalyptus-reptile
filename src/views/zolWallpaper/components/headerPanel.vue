@@ -72,9 +72,11 @@ export default class extends Vue {
     this.$emit('styleChange', currentStyleType)
   }
   onColorTypeChange(currentcolor: string) {
-    this.currentColorSystem = this.colorTypeList.find(
+    let currentColorItem = this.colorTypeList.find(
       color => color.value === currentcolor
-    ).color
+    )
+    this.currentColorSystem =
+      (currentColorItem && currentColorItem.color) || 'grey'
     this.$emit('colorChange', currentcolor)
   }
   onPixelRatioChange(currentPixelRatio: string) {
@@ -99,7 +101,11 @@ export default class extends Vue {
       }
     }).then((colorTypeList: any[]) => {
       this.colorTypeList = colorTypeList
-      this.colorTypeList.unshift({text: '全部', value: '', color: 'cyan'})
+      this.colorTypeList.unshift({
+        text: '全部',
+        value: '',
+        color: 'grey'
+      })
     })
   }
   reFindPixelRedioList() {

@@ -46,12 +46,17 @@
         </v-col>
       </v-row>
     </v-container>
+    <collection-detail
+      :isShowOverlay.sync="isShowCollectionDetail"
+      :collectionId="currentExpandCollection.url"
+    ></collection-detail>
   </euInfiniteScroll>
 </template>
 
 <script lang="ts">
 import collectionCard from '@/components/collectionCard.vue'
 import headerPanel from './components/headerPanel.vue'
+import collectionDetail from './components/collectionDetail.vue'
 import {Component, Vue} from 'vue-property-decorator'
 import {State, Getter, Action, Mutation, namespace} from 'vuex-class'
 import Page from '@/helper/Page'
@@ -64,22 +69,25 @@ interface collectionListMap {
 @Component({
   components: {
     collectionCard,
+    collectionDetail,
     headerPanel
   }
 })
 export default class Zol extends Vue {
   @State(state => state.base.token) token: any
-
+  // tabbar相关
   private currentTabValue: string = 'p1'
   private currentStyleTypeValue: string = ''
   private currentColorTypeValue: string = ''
   private currentPixelRatioValue: string = ''
 
+  // 列表相关
   private isFinished: boolean = false
   private isLoading: boolean = false
   private collectionList: Array<any> = []
   private page: Page = new Page(1, 21, 0)
 
+  // 详情相关
   private currentExpandCollection: object = {}
   private isShowCollectionDetail: boolean = false
 

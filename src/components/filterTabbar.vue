@@ -26,9 +26,9 @@
     </v-row>
     <v-expand-transition>
       <v-sheet
+        v-show="isExpand"
         style="display:flex;"
         class="flex-wrap flex-lg-nowrap  px-3"
-        v-show="isExpand"
       >
         <slot></slot>
       </v-sheet>
@@ -45,7 +45,7 @@ export default class extends Vue {
   @Prop({default: () => []}) tabList!: Array<any>
   @Prop({default: 0}) tabValue!: number
 
-  private isExpand: boolean = false
+  private isExpand: boolean = true
 
   onCurrentTabChange(currentTab: any) {
     this.$emit('tab-change', currentTab)

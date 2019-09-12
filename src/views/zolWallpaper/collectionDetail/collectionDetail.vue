@@ -2,7 +2,7 @@
   <div class="detail d-flex flex-column align-center justify-center">
     <v-card
       tile
-      class="transparent   px-sm-4 pb-4 px-xs-0 detail__image-card"
+      class="transparent   px-sm-4 px-xs-0 detail__image-card"
       raised
     >
       <v-sheet
@@ -12,7 +12,7 @@
         <div>{{ collection.title }}</div>
       </v-sheet>
 
-      <v-card-title class="justify-space-between pa-0 my-4">
+      <v-card-title class="justify-space-between pa-0 my-2">
         <v-chip color="indigo" text-color="white">
           <v-avatar left>
             <v-icon>mdi-account-circle</v-icon>
@@ -62,7 +62,7 @@
       <v-card-actions class="justify-space-between card__slider">
         <v-slide-group
           v-model="currentImageIndex"
-          class="py-4 silder__wrap"
+          class="py-3 silder__wrap"
           mandatory
           center-active
           show-arrows

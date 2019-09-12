@@ -2,8 +2,7 @@
   <v-overlay v-model="isShowOverlay" color="white" opacity="1">
     <div class="collection-slider">
       <v-sheet
-        class="v-system-bar--absolute d-flex justify-lg-space-between px-3 align-center blue darken-3"
-        style="width:100%;"
+        class="v-system-bar--absolute d-flex justify-space-between px-3 align-center blue darken-3"
       >
         <div>收藏集</div>
         <v-btn icon @click="onCloseOverlayClick">
@@ -16,7 +15,16 @@
           v-for="(item, index) of list"
           :key="index"
           :style="itemTransformStyle(item, index)"
-          @click="onSelectClick(index)"
+          @click="onSelectClick(item, index)"
+        >
+          <collectionDetail :collectionId="item.url"></collectionDetail>
+        </div>
+        <div
+          class="item item--animation"
+          v-for="(item, index) of list"
+          :key="index"
+          :style="itemTransformStyle(item, index)"
+          @click="onSelectClick(item, index)"
         >
           <collectionDetail :collectionId="item.url"></collectionDetail>
         </div>
@@ -39,18 +47,17 @@ export default class extends Vue {
   @Prop({default: []}) list!: any[]
   @Prop({default: 0}) value!: number
 
-  private currentIndexByAll: number = 2
   private isInit: boolean = true
 
   onCloseOverlayClick() {
     this.$emit('update:isShowOverlay', false)
   }
-  onSelectClick(index: number) {
+  onSelectClick(item: any) {
     this.isInit = false
-    this.currentIndexByAll = index
+    this.$emit('update:value', item.indexByAll)
   }
-  itemTransformStyle(item: any, indexByAll: number) {
-    let difference = this.currentIndexByAll - indexByAll
+  itemTransformStyle(item: any) {
+    let difference = this.value - item.indexByAll
     let xAxis = 1000 * difference
     let scaleVale = difference ? 0.8 : 1
     return {

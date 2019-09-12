@@ -1,65 +1,52 @@
 <template>
-  <euInfiniteScroll
-    class="overflow-y-auto zol__container"
+  <euInfiniteScroll class="overflow-y-auto zol__container"
     :finished="isFinished"
     :isLoading="isLoading"
-    @loading="onLoading"
-  >
-    <headerPanel
-      :tabValue="currentTabValue"
+    @loading="onLoading">
+    <headerPanel :tabValue="currentTabValue"
       @tabChange="onTabChange"
       @styleChange="onStyleChange"
       @colorChange="onColorChange"
-      @pixelRatioChange="onPixelRatioChange"
-    >
+      @pixelRatioChange="onPixelRatioChange">
     </headerPanel>
     <v-container class="grey lighten-5 pt-0">
       <v-row>
-        <v-col
-          xs="12"
+        <v-col xs="12"
           sm="6"
           md="4"
           lg="3"
           v-for="(collection, index) of collectionList"
-          :key="index"
-        >
-          <collectionCard :item="collection" class="content__card">
-            <div
-              class="card__title--line"
-              @click="onShowCollectionDetail(collection)"
-            >
+          :key="index">
+          <collectionCard :item="collection"
+            class="content__card">
+            <div class="card__title--line"
+              @click="onShowCollectionDetail(collection)">
               {{ collection.title || '' }}
             </div>
             <template slot="actions">
-              <v-btn
-                text
+              <v-btn text
                 color="orange"
-                @click="onShowShareDialogClick(collection)"
-                >分享</v-btn
-              >
+                @click="onShowShareDialogClick(collection)">分享</v-btn>
               <v-spacer></v-spacer>
-              <v-btn text color="orange" @click="onDownloadClick(collection)"
-                >下载
+              <v-btn text
+                color="orange"
+                @click="onDownloadClick(collection)">下载
               </v-btn>
             </template>
           </collectionCard>
         </v-col>
       </v-row>
     </v-container>
-    <collection-slider
-      :isShowOverlay.sync="isShowCollectionDetail"
-      :list="currentCollectionList"
-      :value.sync="currentIndexByAll"
-    >
-    </collection-slider>
+    <collection-slider-x :isShowOverlay.sync="isShowCollectionDetail">
+    </collection-slider-x>
   </euInfiniteScroll>
 </template>
 
 <script lang="ts">
 import collectionCard from '@/components/collectionCard.vue'
 import headerPanel from './components/headerPanel.vue'
-import collectionSlider from './components/collectionSlider.vue'
-import {Component, Vue} from 'vue-property-decorator'
+import collectionSliderX from './components/collectionSlider.vue'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import {State, Getter, Action, Mutation, namespace} from 'vuex-class'
 import Page from '@/helper/Page'
 
@@ -74,7 +61,7 @@ interface collection {
 @Component({
   components: {
     collectionCard,
-    collectionSlider,
+    collectionSliderX,
     headerPanel
   }
 })
@@ -93,23 +80,11 @@ export default class Zol extends Vue {
   private page: Page = new Page(1, 21, 0)
 
   // 详情相关
-  private currentExpandCollection: {url: string; [key: string]: any} = {url: ''}
-  private currentIndexByAll: string | number = ''
+  private currentExpandCollection: collection = {url: ''}
+  private currentIndexByAll: number = -1
+  private currentCollectionList: collection[] = []
   private isShowCollectionDetail: boolean = false
 
-  get currentCollectionList() {
-    if (!this.collectionList.length || this.currentIndexByAll === '') return []
-    let indexByAll: number = this.currentIndexByAll as number
-    console.log('索引值', indexByAll)
-
-    return [
-      this.collectionList[indexByAll - 2],
-      this.collectionList[indexByAll - 1],
-      this.collectionList[indexByAll],
-      this.collectionList[indexByAll + 1],
-      this.collectionList[indexByAll + 2]
-    ]
-  }
   onTabChange(currentTabValue: string) {
     this.currentTabValue = currentTabValue
     this.initData()
@@ -130,7 +105,15 @@ export default class Zol extends Vue {
   onShowCollectionDetail(collection: collection) {
     this.isShowCollectionDetail = true
     this.currentIndexByAll = collection.indexByAll
-    console.log('选中的索引值', this.currentIndexByAll)
+    if (!this.collectionList.length || this.currentIndexByAll === -1) return []
+    let indexByAll: number = this.currentIndexByAll
+    this.currentCollectionList = [
+      this.collectionList[indexByAll - 2],
+      this.collectionList[indexByAll - 1],
+      this.collectionList[indexByAll],
+      this.collectionList[indexByAll + 1],
+      this.collectionList[indexByAll + 2]
+    ]
   }
   onShowShareDialogClick(collection: collection) {
     this.currentExpandCollection = collection
@@ -172,6 +155,16 @@ export default class Zol extends Vue {
   mounted() {
     console.log('token', this.token)
     this.initData()
+  }
+
+  @Watch('currentIndexByAll')
+  watchCurrentIndexByAll(newValue: number, oldValue: number) {
+    const difference = newValue - oldValue
+    this.$set(
+      this.currentCollectionList,
+      this.currentIndexByAll + difference,
+      this.collectionList[this.currentIndexByAll + difference]
+    )
   }
 }
 </script>

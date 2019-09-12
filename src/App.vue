@@ -12,4 +12,6 @@ export default Vue.extend({
   })
 })
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+@import '@/scss/vuetify.scss';
+</style>

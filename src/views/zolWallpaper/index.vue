@@ -46,17 +46,19 @@
         </v-col>
       </v-row>
     </v-container>
-    <collection-detail
+    <collection-slider
       :isShowOverlay.sync="isShowCollectionDetail"
-      :collectionId="currentExpandCollection.url"
-    ></collection-detail>
+      :list="currentCollectionList"
+      :value.sync="currentIndexByAll"
+    >
+    </collection-slider>
   </euInfiniteScroll>
 </template>
 
 <script lang="ts">
 import collectionCard from '@/components/collectionCard.vue'
 import headerPanel from './components/headerPanel.vue'
-import collectionDetail from './components/collectionDetail.vue'
+import collectionSlider from './components/collectionSlider.vue'
 import {Component, Vue} from 'vue-property-decorator'
 import {State, Getter, Action, Mutation, namespace} from 'vuex-class'
 import Page from '@/helper/Page'
@@ -65,11 +67,14 @@ interface collectionListMap {
   collectionList: any[]
   total: number
 }
-
+interface collection {
+  url: string
+  [key: string]: any
+}
 @Component({
   components: {
     collectionCard,
-    collectionDetail,
+    collectionSlider,
     headerPanel
   }
 })
@@ -88,9 +93,23 @@ export default class Zol extends Vue {
   private page: Page = new Page(1, 21, 0)
 
   // 详情相关
-  private currentExpandCollection: object = {}
+  private currentExpandCollection: {url: string; [key: string]: any} = {url: ''}
+  private currentIndexByAll: string | number = ''
   private isShowCollectionDetail: boolean = false
 
+  get currentCollectionList() {
+    if (!this.collectionList.length || this.currentIndexByAll === '') return []
+    let indexByAll: number = this.currentIndexByAll as number
+    console.log('索引值', indexByAll)
+
+    return [
+      this.collectionList[indexByAll - 2],
+      this.collectionList[indexByAll - 1],
+      this.collectionList[indexByAll],
+      this.collectionList[indexByAll + 1],
+      this.collectionList[indexByAll + 2]
+    ]
+  }
   onTabChange(currentTabValue: string) {
     this.currentTabValue = currentTabValue
     this.initData()
@@ -108,15 +127,16 @@ export default class Zol extends Vue {
     this.initData()
   }
 
-  onShowCollectionDetail(collection: object) {
+  onShowCollectionDetail(collection: collection) {
     this.isShowCollectionDetail = true
-    this.currentExpandCollection = collection
+    this.currentIndexByAll = collection.indexByAll
+    console.log('选中的索引值', this.currentIndexByAll)
   }
-  onShowShareDialogClick(collection: object) {
+  onShowShareDialogClick(collection: collection) {
     this.currentExpandCollection = collection
     console.log('分享')
   }
-  onDownloadClick(collection: object) {
+  onDownloadClick(collection: collection) {
     this.currentExpandCollection = collection
     console.log('下载')
   }
@@ -137,6 +157,7 @@ export default class Zol extends Vue {
         pageSize: this.page.pageSize
       }
     }).then(({collectionList = [], total = 0}: collectionListMap) => {
+      collectionList.map((collection, index) => (collection.indexByAll = index))
       this.isLoading = false
       this.collectionList = [...this.collectionList, ...collectionList]
       this.page.pageTotal = total

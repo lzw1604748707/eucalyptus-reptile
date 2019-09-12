@@ -1,38 +1,31 @@
 <template>
-  <filterTabbar :tabList="tabList" @tab-change="onTabChange">
-    <v-text-field
-      height="35"
+  <filterTabbar :tabList="tabList"
+    @tab-change="onTabChange">
+    <v-text-field height="35"
       label="搜索"
       class="filter__search no-sm-flex no-verify mr-sm-3"
-      solo
-    ></v-text-field>
-    <v-autocomplete
-      class="no-verify"
+      solo></v-text-field>
+    <v-autocomplete class="no-verify"
       height="35"
       label="壁纸分类"
       :items="styleTypeList"
       clearable
       solo
-      @change="onStyleTypeChange"
-    ></v-autocomplete>
-    <v-autocomplete
-      class="mx-sm-3 no-verify"
+      @change="onStyleTypeChange"></v-autocomplete>
+    <v-autocomplete class="mx-sm-3 no-verify"
       height="35"
       label="壁纸尺寸"
       :items="pixelRatioList"
       clearable
       solo
-      @change="onPixelRatioChange"
-    ></v-autocomplete>
-    <v-autocomplete
-      class="no-verify"
+      @change="onPixelRatioChange"></v-autocomplete>
+    <v-autocomplete class="no-verify"
       height="35"
       label="壁纸色系"
       :items="colorTypeList"
       clearable
       solo
-      @change="onColorTypeChange"
-    >
+      @change="onColorTypeChange">
       <template v-slot:item="data">
         <v-list-item-icon>
           <v-icon :color="data.item.color">fiber_manual_record</v-icon>
@@ -142,7 +135,6 @@ export default class extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/vuetify.scss';
 @media (min-width: 600px) {
   .no-sm-flex {
     flex: none;

@@ -1,5 +1,5 @@
-::v-deep.v-text-field.v-text-field--solo .v-input__control,
-::v-deep .v-text-field--outlined > .v-input__control > .v-input__slot {
+.v-text-field.v-text-field--solo .v-input__control,
+.v-text-field--outlined > .v-input__control > .v-input__slot {
   min-height: 24px !important;
   display: flex !important;
   align-items: center !important;
@@ -18,10 +18,16 @@
   }
 }
 .no-verify {
-  ::v-deep .v-input__slot {
+  .v-input__slot {
     margin-bottom: 15px;
   }
-  ::v-deep .v-text-field__details {
+  .v-text-field__details {
     display: none;
   }
+}
+
+.v-window__prev,
+.v-window__next {
+  height: 36px;
+  line-height: 1;
 }

@@ -11,34 +11,37 @@
       </v-sheet>
       <div class="slider__wrap">
         <div
-          class="item item--animation"
+          :class="['item', {'item--animation': !isShowLoading}]"
           v-for="(item, index) of beforeList"
-          :key="index"
+          :key="'b' + index"
           :style="itemTransformStyle(item, index)"
           @click="onSelectClick(item, index)"
         >
-          {{ item }}
+          <collectionDetail :collectionId="item.url"></collectionDetail>
         </div>
         <div
-          class="item item--animation"
+          :class="['item', {'item--animation': !isShowLoading}]"
           v-for="(item, index) of currentList"
-          :key="index"
+          :key="'c' + index"
           :style="itemTransformStyle(item, index)"
           @click="onSelectClick(item, index)"
         >
-          {{ item }}
+          <collectionDetail :collectionId="item.url"></collectionDetail>
         </div>
         <div
-          class="item item--animation"
+          :class="['item', {'item--animation': !isShowLoading}]"
           v-for="(item, index) of afterList"
-          :key="index"
+          :key="'a' + index"
           :style="itemTransformStyle(item, index)"
           @click="onSelectClick(item, index)"
         >
-          {{ item }}
+          <collectionDetail :collectionId="item.url"></collectionDetail>
         </div>
       </div>
     </div>
+    <v-overlay v-model="isShowLoading">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    </v-overlay>
   </v-overlay>
 </template>
 
@@ -51,15 +54,37 @@ import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
     collectionDetail
   }
 })
-export default class extends Vue {
+export default class CollectionSliderX extends Vue {
+  @Prop({default: false}) isShowOverlay!: boolean
+  @Prop({default: -1}) IndexByAll!: number
+
+  @Prop({
+    default: () => {
+      return []
+    }
+  })
+  beforeList!: any[]
+
+  @Prop({
+    default: () => {
+      return []
+    }
+  })
+  currentList!: any[]
+
+  @Prop({
+    default: () => {
+      return []
+    }
+  })
+  afterList!: any[]
+
   private persetList: any[] = []
-  private currentList: any[] = []
-  private beforeList: any[] = []
-  private afterList: any[] = []
-
   private currentCount: number = 5
-
   private currentIndexByAll = 0
+  private isInit: boolean = true
+  private isShowLoading: boolean = false
+
   private isHeader = {list: 'currentList', index: 0}
   private isTail = {list: 'currentList', index: 4}
 
@@ -67,7 +92,8 @@ export default class extends Vue {
     this.$emit('update:isShowOverlay', false)
   }
   onSelectClick(item: any) {
-    this.currentIndexByAll = item
+    this.isInit = false
+    this.currentIndexByAll = item.indexByAll
   }
   itemTransformStyle(item: any) {
     let difference = this.currentIndexByAll - item.indexByAll
@@ -85,12 +111,16 @@ export default class extends Vue {
         if (this.isHeader.index < 4) {
           this.isHeader.index++
         } else {
-          this.isHeader.list =
-            this.isHeader.list === 'currentList' ? 'afterList' : 'currentList'
+          this.isShowLoading = true
+          this.$emit('on-after', this.currentIndexByAll + 2)
+          this.isHeader.list = 'currentList'
           this.isHeader.index = 0
+          this.isTail.list = 'currentList'
+          this.isTail.index = 4
         }
       } else {
         this.isTail.list = 'afterList'
+        this.isHeader.index++
         this.isTail.index = 0
       }
     } else {
@@ -109,20 +139,29 @@ export default class extends Vue {
       }
     }
   }
-  mounted() {
-    this.currentList = [1, 2, 3, 4, 5]
-  }
+
+  mounted() {}
+
   @Watch('currentIndexByAll')
   watchCurrentIndexByAll(newVal: number, oldVal: number) {
+    if (this.isInit) return
     let difference = newVal - oldVal > 0
-
-    let listStrName: 'afterList' | 'beforeList' = 'afterList'
-
-    listStrName = difference ? 'afterList' : 'beforeList'
-
     this.sliderQueue(difference)
+  }
 
-    // 逻辑未完成版本
+  @Watch('IndexByAll', {immediate: true})
+  watchIndexByAll(newVal: number, oldVal: number) {
+    console.log('传进', newVal)
+    if (newVal > -1) {
+      this.currentIndexByAll = newVal
+    }
+  }
+
+  @Watch('afterList')
+  watchAfterList(newVal: number, oldVal: number) {
+    this.$nextTick(() => {
+      this.isShowLoading = false
+    })
   }
 }
 </script>
@@ -152,7 +191,6 @@ export default class extends Vue {
     width: 800px;
     height: 700px;
     font-size: 30px;
-    background: skyblue;
     color: red;
     &--animation {
       transition: transform 0.4s ease-in-out;

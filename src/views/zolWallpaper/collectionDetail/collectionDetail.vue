@@ -126,6 +126,7 @@ export default class extends Vue {
 
 <style lang="scss" scoped>
 .detail {
+  background-color: #fff;
   &__image-card {
     border-radius: 5px;
     .card__active {

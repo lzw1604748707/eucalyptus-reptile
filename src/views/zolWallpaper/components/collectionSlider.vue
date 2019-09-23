@@ -19,15 +19,6 @@
         >
           <collectionDetail :collectionId="item.url"></collectionDetail>
         </div>
-        <div
-          class="item item--animation"
-          v-for="(item, index) of list"
-          :key="index"
-          :style="itemTransformStyle(item, index)"
-          @click="onSelectClick(item, index)"
-        >
-          <collectionDetail :collectionId="item.url"></collectionDetail>
-        </div>
       </div>
     </div>
   </v-overlay>
@@ -57,12 +48,14 @@ export default class extends Vue {
     this.$emit('update:value', item.indexByAll)
   }
   itemTransformStyle(item: any) {
+    console.log('我是老', item.indexByAll)
+
     let difference = this.value - item.indexByAll
     let xAxis = 1000 * difference
     let scaleVale = difference ? 0.8 : 1
     return {
       zIndex: difference ? 0 : 1,
-      transform: `${`translateX(${xAxis}px)`} scale(${scaleVale})`
+      transform: `${`translateX(${-xAxis}px)`} scale(${scaleVale})`
     }
   }
 }

@@ -30,7 +30,6 @@
               </v-avatar>
               {{ collection.liveCount || 0 }}
             </v-chip>
-
             <div class="grey darken-3  card__active">
               <v-btn icon>
                 <v-icon>mdi-bookmark</v-icon>

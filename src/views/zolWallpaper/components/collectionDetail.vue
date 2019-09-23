@@ -1,26 +1,22 @@
 <template>
   <v-overlay v-model="isShowOverlay" color="white" opacity="1">
     <div class="detail d-flex flex-column align-center justify-center">
-      <div
-        style="width:100%;"
-        class="v-system-bar--absolute d-flex justify-center"
+      <v-card
+        tile
+        class="transparent   px-sm-4 px-xs-0 detail__image-card"
+        raised
       >
         <v-sheet
-          class="px-3 mb-10 d-flex justify-space-between align-center blue darken-3"
-          style="width:100%; max-width:850px;"
+          class="d-flex justify-space-between px-3 align-center blue darken-3 detail__sheet"
+          style=""
         >
           <div>{{ collection.title }}</div>
           <v-btn icon @click="onCloseOverlayClick">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-sheet>
-      </div>
-      <v-card
-        tile
-        class="transparent ma-2 px-sm-4 py-4 px-xs-0 detail__image-card"
-        raised
-      >
-        <v-card-title class="justify-space-between pa-0 mb-4">
+
+        <v-card-title class="justify-space-between pa-0 my-2">
           <v-chip color="indigo" text-color="white">
             <v-avatar left>
               <v-icon>mdi-account-circle</v-icon>
@@ -70,7 +66,7 @@
         <v-card-actions class="justify-space-between card__slider">
           <v-slide-group
             v-model="currentImageIndex"
-            class="py-4 silder__wrap"
+            class="py-3 silder__wrap"
             mandatory
             center-active
             show-arrows
@@ -142,8 +138,7 @@ export default class extends Vue {
 
 <style lang="scss" scoped>
 .detail {
-  width: 100vw;
-  height: 100vh;
+  background-color: #fff;
   &__image-card {
     .card__active {
       max-width: 72px;
@@ -155,7 +150,6 @@ export default class extends Vue {
         ::v-deep.v-icon {
           color: grey;
         }
-
         width: 100%;
       }
       .silder__image {
@@ -173,7 +167,13 @@ export default class extends Vue {
     max-width: 800px;
     max-height: 500px;
   }
-
+  .detail__sheet {
+    width: 100%;
+    max-width: 850px;
+    margin-top: -14px;
+    border-radius: 5px !important;
+    border-top-right-radius: 5px;
+  }
   ::v-deep.v-slide-group__content {
     height: 130px;
     align-items: center;
@@ -182,7 +182,6 @@ export default class extends Vue {
     margin-bottom: -2px;
   }
 }
-
 @media (max-width: 600px) {
   .px-xs-0 {
     padding-left: 0;

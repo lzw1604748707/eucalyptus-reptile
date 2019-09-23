@@ -1,6 +1,7 @@
 <template>
   <v-app id="inspire">
-    <sidePar :drawer="drawer" :menus="items"></sidePar>
+    <sidePar :drawer="drawer"
+      :menus="items"></sidePar>
     <topPar :drawer.sync="drawer"></topPar>
     <v-content>
       <router-view></router-view>

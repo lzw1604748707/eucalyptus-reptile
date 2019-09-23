@@ -1,33 +1,37 @@
 <template>
   <v-card class="collection__card">
-    <v-img
-      class="white--text"
+    <v-img class="white--text"
       height="200px"
       style="flex:none;"
-      :src="item.cover"
-    >
+      :src="item.cover">
       <template v-slot:placeholder>
-        <v-row class="fill-height ma-0" align="center" justify="center">
-          <v-progress-circular
-            :rotate="-90"
+        <v-row class="fill-height ma-0"
+          align="center"
+          justify="center">
+          <v-progress-circular :rotate="-90"
             :size="100"
             :width="15"
             :value="loadProgressValue"
-            color="primary"
-          >
+            color="primary">
             {{ loadProgressValue }}
           </v-progress-circular>
         </v-row>
       </template>
-      <div class="align-end fill-height" style="display:flex; ">
-        <v-chip class="ma-2" color="indigo" text-color="white">
+      <div class="align-end fill-height"
+        style="display:flex; ">
+        <v-chip class="ma-2"
+          color="indigo"
+          text-color="white">
           <v-avatar left>
             <v-icon>mdi-image-multiple</v-icon>
           </v-avatar>
           {{ item.sheets || '未知' }}
         </v-chip>
         <v-spacer></v-spacer>
-        <v-chip class="ma-2" color="#75757560" label text-color="white">
+        <v-chip class="ma-2"
+          color="#75757560"
+          label
+          text-color="white">
           {{ item.createDate || '未知' }}
         </v-chip>
       </div>
@@ -43,9 +47,11 @@
     <v-card-text> </v-card-text>
     <v-card-actions>
       <slot name="actions">
-        <v-btn text color="orange">分享</v-btn>
+        <v-btn text
+          color="orange">分享</v-btn>
         <v-spacer></v-spacer>
-        <v-btn text color="orange">下载 </v-btn>
+        <v-btn text
+          color="orange">下载 </v-btn>
       </slot>
     </v-card-actions>
   </v-card>

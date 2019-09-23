@@ -1,35 +1,39 @@
 <template>
-  <v-card elevation="1" class="ma-3">
-    <v-row align="center" class="flex-nowrap">
+  <v-card elevation="1"
+    class="ma-3">
+    <v-row align="center"
+      class="flex-nowrap">
       <v-col class="filter__tabs">
-        <v-tabs center-active @change="onCurrentTabChange" :value="tabValue">
-          <v-tab v-for="(item, index) of tabList" :key="index">
-            {{ item.text }}</v-tab
-          >
+        <v-tabs center-active
+          @change="onCurrentTabChange"
+          :value="tabValue">
+          <v-tab v-for="(item, index) of tabList"
+            :key="index">
+            {{ item.text }}</v-tab>
         </v-tabs>
       </v-col>
       <div class="filter__active">
-        <v-btn dark color="teal" x-small fab @click="onShowExpansionPanelClick">
+        <v-btn dark
+          color="teal"
+          x-small
+          fab
+          @click="onShowExpansionPanelClick">
           <v-icon>mdi-format-list-bulleted-square</v-icon>
         </v-btn>
-        <v-btn
-          dark
+        <v-btn dark
           class="mx-3"
           x-small
           color="cyan"
           fab
-          @click.stop="onShowLayoutClick"
-        >
+          @click.stop="onShowLayoutClick">
           <v-icon>mdi-view-dashboard</v-icon>
         </v-btn>
       </div>
     </v-row>
     <v-expand-transition>
-      <v-sheet
-        v-show="isExpand"
+      <v-sheet v-show="isExpand"
         style="display:flex;"
-        class="flex-wrap flex-lg-nowrap  px-3"
-      >
+        class="flex-wrap flex-lg-nowrap  px-3">
         <slot></slot>
       </v-sheet>
     </v-expand-transition>

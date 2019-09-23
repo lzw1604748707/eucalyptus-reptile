@@ -1,11 +1,12 @@
 <template>
-  <v-navigation-drawer :value="drawer" clipped app>
-    <v-list-item-group v-model="currentView" color="primary">
-      <v-list-item
-        v-for="(item, index) of menus"
+  <v-navigation-drawer :value="drawer"
+    clipped
+    app>
+    <v-list-item-group v-model="currentView"
+      color="primary">
+      <v-list-item v-for="(item, index) of menus"
         :key="index"
-        @click="onPushViewClick(item.routerName)"
-      >
+        @click="onPushViewClick(item.routerName)">
         <v-list-item-icon>
           <v-icon v-text="item.icon"></v-icon>
         </v-list-item-icon>

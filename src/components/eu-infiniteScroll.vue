@@ -1,16 +1,16 @@
 <template>
-  <div id="eu-infinite-scroll" v-scroll:#eu-infinite-scroll="onScroll">
+  <div id="eu-infinite-scroll"
+    v-scroll:#eu-infinite-scroll="onScroll">
     <slot></slot>
     <div class="infinite-scroll__progress">
-      <v-progress-circular
-        v-if="isLoading"
+      <v-progress-circular v-if="isLoading"
         indeterminate
-        color="primary"
-      ></v-progress-circular>
+        color="primary"></v-progress-circular>
     </div>
-    <v-sheet class="text-center" v-if="finished" dark color="blue darken-3"
-      >In the end</v-sheet
-    >
+    <v-sheet class="text-center"
+      v-if="finished"
+      dark
+      color="blue darken-3">In the end</v-sheet>
   </div>
 </template>
 
@@ -22,6 +22,7 @@ export default class extends Vue {
   @Prop({default: 5}) offset!: number
   @Prop({default: false}) isLoading!: boolean
   @Prop({default: false}) finished!: boolean
+
   onScroll(e: any) {
     if (this.finished || this.isLoading) return
     let bottomDistance =

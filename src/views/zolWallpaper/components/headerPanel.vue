@@ -142,7 +142,6 @@ export default class extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '@/scss/vuetify.scss';
 @media (min-width: 600px) {
   .no-sm-flex {
     flex: none;

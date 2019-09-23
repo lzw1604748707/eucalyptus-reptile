@@ -13,7 +13,7 @@ const qs = require('qs')
  */
 let baseURL = ''
 if (process.env.NODE_ENV === 'development') {
-  baseURL = 'http://localhost/'
+  baseURL = 'http://10.10.10.63/'
 } else if (process.env.NODE_ENV === 'production') {
   baseURL = 'https://api.yang143.cn/geek/'
 }

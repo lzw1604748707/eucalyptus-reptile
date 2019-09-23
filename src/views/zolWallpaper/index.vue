@@ -46,18 +46,20 @@
         </v-col>
       </v-row>
     </v-container>
-    <collection-detail
+    <collectionSlider
       :isShowOverlay.sync="isShowCollectionDetail"
-      :collectionId="currentExpandCollection.url"
-    ></collection-detail>
+      :list="currentCollectionList"
+      :value.sync="currentIndexByAll"
+    ></collectionSlider>
   </euInfiniteScroll>
 </template>
 
 <script lang="ts">
 import collectionCard from '@/components/collectionCard.vue'
 import headerPanel from './components/headerPanel.vue'
-import collectionDetail from './components/collectionDetail.vue'
-import {Component, Vue} from 'vue-property-decorator'
+// import collectionSliderX from './components/collectionSliderX.vue'
+import collectionSlider from './components/collectionSlider.vue'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 import {State, Getter, Action, Mutation, namespace} from 'vuex-class'
 import Page from '@/helper/Page'
 
@@ -65,11 +67,15 @@ interface collectionListMap {
   collectionList: any[]
   total: number
 }
-
+interface collection {
+  url: string
+  [key: string]: any
+}
 @Component({
   components: {
     collectionCard,
-    collectionDetail,
+    collectionSlider,
+    // collectionSliderX,
     headerPanel
   }
 })
@@ -86,9 +92,14 @@ export default class Zol extends Vue {
   private isLoading: boolean = false
   private collectionList: Array<any> = []
   private page: Page = new Page(1, 21, 0)
+  private currentMaxIndex: number = -1
 
   // 详情相关
-  private currentExpandCollection: object = {}
+  private currentExpandCollection: collection = {url: ''}
+  private currentIndexByAll: number = -1
+  private currentCollectionList: collection[] = []
+  private beforeCollectionList: collection[] = []
+  private afterCollectionList: collection[] = []
   private isShowCollectionDetail: boolean = false
 
   onTabChange(currentTabValue: string) {
@@ -108,15 +119,34 @@ export default class Zol extends Vue {
     this.initData()
   }
 
-  onShowCollectionDetail(collection: object) {
+  onShowCollectionDetail(collection: collection) {
     this.isShowCollectionDetail = true
-    this.currentExpandCollection = collection
+    this.currentIndexByAll = collection.indexByAll
+    if (!this.collectionList.length || this.currentIndexByAll === -1) return []
+    // this.getCollectionDetail()
+    let beforeIndex = this.currentIndexByAll
+    let afterIndex = this.currentIndexByAll
+    this.currentCollectionList = [this.collectionList[this.currentIndexByAll]]
+    while (beforeIndex > 0 && beforeIndex > this.currentIndexByAll - 4) {
+      --beforeIndex
+
+      this.currentCollectionList.unshift(this.collectionList[beforeIndex])
+    }
+    while (
+      afterIndex < this.page.pageTotal &&
+      afterIndex < this.page.getCurrentCount() - 1 &&
+      afterIndex < this.currentIndexByAll + 5
+    ) {
+      ++afterIndex
+
+      this.currentCollectionList.push(this.collectionList[afterIndex])
+    }
   }
-  onShowShareDialogClick(collection: object) {
+  onShowShareDialogClick(collection: collection) {
     this.currentExpandCollection = collection
     console.log('分享')
   }
-  onDownloadClick(collection: object) {
+  onDownloadClick(collection: collection) {
     this.currentExpandCollection = collection
     console.log('下载')
   }
@@ -125,8 +155,18 @@ export default class Zol extends Vue {
     this.page.nextPage()
     this.reFindZOLWallpagerList()
   }
+  async onLoadingPageCollection(index: number) {
+    this.isLoading = false
+    this.page.nextPage()
+    await this.reFindZOLWallpagerList()
+    this.$set(
+      this.currentCollectionList,
+      this.currentCollectionList.length,
+      this.collectionList[index]
+    )
+  }
   reFindZOLWallpagerList() {
-    this.$callApi({
+    return this.$callApi({
       api: 'zol/collectionList',
       param: {
         styleType: this.currentStyleTypeValue,
@@ -137,8 +177,13 @@ export default class Zol extends Vue {
         pageSize: this.page.pageSize
       }
     }).then(({collectionList = [], total = 0}: collectionListMap) => {
+      collectionList.map(
+        (collection, index) =>
+          (collection.indexByAll = index + this.currentMaxIndex + 1)
+      )
       this.isLoading = false
       this.collectionList = [...this.collectionList, ...collectionList]
+      this.currentMaxIndex = this.collectionList.length - 1
       this.page.pageTotal = total
       this.isFinished = this.page.isLastPage()
     })
@@ -151,6 +196,50 @@ export default class Zol extends Vue {
   mounted() {
     console.log('token', this.token)
     this.initData()
+  }
+
+  @Watch('currentIndexByAll')
+  watchCurrentIndexByAll(newValue: number, oldValue: number) {
+    let lastCollectionIndex = this.currentCollectionList.length - 1
+    let isNext = false
+    let isBefore = false
+
+    isNext =
+      newValue >
+        this.currentCollectionList[lastCollectionIndex - 3].indexByAll &&
+      newValue < this.currentCollectionList[lastCollectionIndex].indexByAll
+
+    isBefore =
+      newValue < this.currentCollectionList[3].indexByAll &&
+      newValue > this.currentCollectionList[0].indexByAll
+    if (isNext) {
+      for (let i = 1; i < 3; i++) {
+        let tempAddIndex =
+          this.currentCollectionList[lastCollectionIndex].indexByAll + i
+        if (tempAddIndex < this.collectionList.length) {
+          this.$set(
+            this.currentCollectionList,
+            this.currentCollectionList.length,
+            this.collectionList[tempAddIndex]
+          )
+        } else {
+          this.onLoadingPageCollection(tempAddIndex)
+        }
+      }
+    }
+    if (isBefore) {
+      console.log('向前加载')
+      for (let i = 1; i < 5; i++) {
+        let tempAddIndex = this.currentCollectionList[0].indexByAll - i
+        if (tempAddIndex > -1) {
+          console.log('有值哦', this.collectionList[tempAddIndex])
+
+          this.currentCollectionList.unshift(this.collectionList[tempAddIndex])
+        } else {
+          break
+        }
+      }
+    }
   }
 }
 </script>

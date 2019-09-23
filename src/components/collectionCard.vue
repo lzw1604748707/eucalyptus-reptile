@@ -1,11 +1,24 @@
 <template>
-  <v-card style="display:flex;flex-direction: column;">
+  <v-card class="collection__card">
     <v-img
       class="white--text"
       height="200px"
       style="flex:none;"
-      v-lazy="item.cover"
+      :src="item.cover"
     >
+      <template v-slot:placeholder>
+        <v-row class="fill-height ma-0" align="center" justify="center">
+          <v-progress-circular
+            :rotate="-90"
+            :size="100"
+            :width="15"
+            :value="loadProgressValue"
+            color="primary"
+          >
+            {{ loadProgressValue }}
+          </v-progress-circular>
+        </v-row>
+      </template>
       <div class="align-end fill-height" style="display:flex; ">
         <v-chip class="ma-2" color="indigo" text-color="white">
           <v-avatar left>
@@ -40,7 +53,6 @@
 
 <script lang="ts">
 import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
-
 @Component
 export default class extends Vue {
   @Prop({
@@ -50,6 +62,17 @@ export default class extends Vue {
     }
   })
   item!: object
+  private loadInterval: any = {}
+  private loadProgressValue: number = 0
+  mounted() {
+    this.loadInterval = setInterval(() => {
+      if (this.loadProgressValue === 100) {
+        clearInterval(this.loadInterval)
+        return
+      }
+      this.loadProgressValue += 50
+    }, 100)
+  }
   @Watch('item')
   watchItem(val: any) {
     console.log(val)
@@ -57,4 +80,14 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.collection__card {
+  display: flex;
+  flex-direction: column;
+  .white--text {
+    ::v-deep.v-image__image--cover {
+      filter: none;
+    }
+  }
+}
+</style>

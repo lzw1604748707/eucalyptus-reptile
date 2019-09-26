@@ -1,55 +1,44 @@
 <template>
-  <euInfiniteScroll
-    class="overflow-y-auto zol__container"
+  <euInfiniteScroll class="overflow-y-auto zol__container"
     :finished="isFinished"
     :isLoading="isLoading"
-    @loading="onLoading"
-  >
-    <headerPanel
-      :tabValue="currentTabValue"
+    @loading="onLoading">
+    <headerPanel :tabValue="currentTabValue"
       @tabChange="onTabChange"
       @styleChange="onStyleChange"
       @colorChange="onColorChange"
-      @pixelRatioChange="onPixelRatioChange"
-    >
+      @pixelRatioChange="onPixelRatioChange">
     </headerPanel>
     <v-container class="grey lighten-5 pt-0">
       <v-row>
-        <v-col
-          xs="12"
+        <v-col xs="12"
           sm="6"
           md="4"
           lg="3"
           v-for="(collection, index) of collectionList"
-          :key="index"
-        >
-          <collectionCard :item="collection" class="content__card">
-            <div
-              class="card__title--line"
-              @click="onShowCollectionDetail(collection)"
-            >
+          :key="index">
+          <collectionCard :item="collection"
+            class="content__card">
+            <div class="card__title--line"
+              @click="onShowCollectionDetail(collection)">
               {{ collection.title || '' }}
             </div>
             <template slot="actions">
-              <v-btn
-                text
+              <v-btn text
                 color="orange"
-                @click="onShowShareDialogClick(collection)"
-                >分享</v-btn
-              >
+                @click="onShowShareDialogClick(collection)">分享</v-btn>
               <v-spacer></v-spacer>
-              <v-btn text color="orange" @click="onDownloadClick(collection)"
-                >下载
+              <v-btn text
+                color="orange"
+                @click="onDownloadClick(collection)">下载
               </v-btn>
             </template>
           </collectionCard>
         </v-col>
       </v-row>
     </v-container>
-    <collection-detail
-      :isShowOverlay.sync="isShowCollectionDetail"
-      :collectionId="currentExpandCollection.url"
-    ></collection-detail>
+    <collection-detail :isShowOverlay.sync="isShowCollectionDetail"
+      :collectionId="currentExpandCollection.url"></collection-detail>
   </euInfiniteScroll>
 </template>
 
@@ -65,7 +54,10 @@ interface collectionListMap {
   collectionList: any[]
   total: number
 }
-
+interface collection {
+  url: string
+  [key: string]: any
+}
 @Component({
   components: {
     collectionCard,
@@ -88,7 +80,8 @@ export default class Zol extends Vue {
   private page: Page = new Page(1, 21, 0)
 
   // 详情相关
-  private currentExpandCollection: object = {}
+  private currentExpandCollection: collection = {url: ''}
+
   private isShowCollectionDetail: boolean = false
 
   onTabChange(currentTabValue: string) {
@@ -108,15 +101,15 @@ export default class Zol extends Vue {
     this.initData()
   }
 
-  onShowCollectionDetail(collection: object) {
+  onShowCollectionDetail(collection: collection) {
     this.isShowCollectionDetail = true
     this.currentExpandCollection = collection
   }
-  onShowShareDialogClick(collection: object) {
+  onShowShareDialogClick(collection: collection) {
     this.currentExpandCollection = collection
     console.log('分享')
   }
-  onDownloadClick(collection: object) {
+  onDownloadClick(collection: collection) {
     this.currentExpandCollection = collection
     console.log('下载')
   }
@@ -126,7 +119,7 @@ export default class Zol extends Vue {
     this.reFindZOLWallpagerList()
   }
   reFindZOLWallpagerList() {
-    this.$callApi({
+    return this.$callApi({
       api: 'zol/collectionList',
       param: {
         styleType: this.currentStyleTypeValue,

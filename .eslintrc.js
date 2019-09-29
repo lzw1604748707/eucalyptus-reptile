@@ -15,7 +15,6 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'prettier/prettier': 'off'
-    // '@vue/prettier': 'off'
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',

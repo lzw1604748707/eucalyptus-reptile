@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
-
-const Scroll = require('vuetify/lib/directives')
+const {Scroll} = require('vuetify/lib/directives')
 
 Vue.use(Vuetify, {
   directives: {

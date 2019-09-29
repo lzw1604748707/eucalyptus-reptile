@@ -37,15 +37,15 @@
         </v-col>
       </v-row>
     </v-container>
-    <collection-detail :isShowOverlay.sync="isShowCollectionDetail"
-      :collectionId="currentExpandCollection.url"></collection-detail>
+    <!-- <collection-detail :isShowOverlay.sync="isShowCollectionDetail"
+      :collectionId="currentExpandCollection.url"></collection-detail> -->
   </euInfiniteScroll>
 </template>
 
 <script lang="ts">
 import collectionCard from '@/components/collectionCard.vue'
 import headerPanel from './components/headerPanel.vue'
-import collectionDetail from './components/collectionDetail.vue'
+// import collectionDetail from './components/collectionDetail.vue'
 import {Component, Vue} from 'vue-property-decorator'
 import {State, Getter, Action, Mutation, namespace} from 'vuex-class'
 import Page from '@/helper/Page'
@@ -61,7 +61,7 @@ interface collection {
 @Component({
   components: {
     collectionCard,
-    collectionDetail,
+    // collectionDetail,
     headerPanel
   }
 })
@@ -102,6 +102,10 @@ export default class Zol extends Vue {
   }
 
   onShowCollectionDetail(collection: collection) {
+    this.$router.push({
+      name: 'zolCollectionDetail',
+      query: {collectionId: collection.url}
+    })
     this.isShowCollectionDetail = true
     this.currentExpandCollection = collection
   }

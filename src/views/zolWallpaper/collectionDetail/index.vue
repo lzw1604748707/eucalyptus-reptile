@@ -1,26 +1,26 @@
 <template>
   <div class="detail d-flex flex-column align-center justify-center">
-    <v-card
-      tile
+    <v-card tile
       class="transparent   px-sm-4 px-xs-0 detail__image-card"
-      raised
-    >
-      <v-sheet
+      raised>
+      <v-sheet dark
         class="px-3 align-center blue darken-3"
-        style="width:100%; max-width:850px; margin-top:-14px;"
-      >
+        style="width:100%; max-width:850px; margin-top:-14px;">
         <div>{{ collection.title }}</div>
       </v-sheet>
-
       <v-card-title class="justify-space-between pa-0 my-2">
-        <v-chip color="indigo" text-color="white">
+        <v-chip color="indigo"
+          text-color="white">
           <v-avatar left>
             <v-icon>mdi-account-circle</v-icon>
           </v-avatar>
           {{ collection.author || '未知' }}
         </v-chip>
-        <div class="d-flex align-center" style="width:auto;">
-          <v-chip class="mr-2" color="pink" text-color="white">
+        <div class="d-flex align-center"
+          style="width:auto;">
+          <v-chip class="mr-2"
+            color="pink"
+            text-color="white">
             <v-avatar left>
               <v-icon>mdi-heart</v-icon>
             </v-avatar>
@@ -28,63 +28,53 @@
           </v-chip>
 
           <div class="grey darken-3  card__active">
-            <v-btn icon>
+            <v-btn dark
+              icon>
               <v-icon>mdi-bookmark</v-icon>
             </v-btn>
-            <v-btn icon>
+            <v-btn dark
+              icon>
               <v-icon>mdi-share-variant</v-icon>
             </v-btn>
           </div>
         </div>
       </v-card-title>
-      <v-window
-        style=""
+      <v-window style=""
         v-model="currentImageIndex"
         class="elevation-1 detail__image"
-        show-arrows
-      >
-        <v-window-item
-          class="fill-height"
+        show-arrows>
+        <v-window-item class="fill-height"
           v-for="(image, index) of collection.imageList"
-          :key="index"
-        >
-          <v-row class="fill-height" align="center" justify="center">
-            <v-img
-              :src="transformImage(image)"
+          :key="index">
+          <v-row class="fill-height"
+            align="center"
+            justify="center">
+            <v-img :src="transformImage(image)"
               :aspect-ratio="16 / 10"
               class="grey lighten-2"
               max-width="800"
-              max-height="500"
-            ></v-img>
+              max-height="500"></v-img>
           </v-row>
         </v-window-item>
       </v-window>
       <v-card-actions class="justify-space-between card__slider">
-        <v-slide-group
-          v-model="currentImageIndex"
+        <v-slide-group v-model="currentImageIndex"
           class="py-3 silder__wrap"
           mandatory
           center-active
           show-arrows
-          :dark="false"
-        >
-          <v-slide-item
-            v-for="(image, index) of collection.imageList"
+          :dark="false">
+          <v-slide-item v-for="(image, index) of collection.imageList"
             :key="index"
-            v-slot:default="{active, toggle}"
-          >
-            <v-card
-              :class="['silder__image mx-2', {'silder__image--active': active}]"
+            v-slot:default="{active, toggle}">
+            <v-card :class="['silder__image mx-2', {'silder__image--active': active}]"
               align="center"
               justify="center"
-              @click="toggle"
-            >
-              <v-img
-                :src="image"
+              @click="toggle">
+              <v-img :src="image"
                 :aspect-ratio="16 / 10"
                 max-width="172"
-                max-height="108"
-              ></v-img>
+                max-height="108"></v-img>
             </v-card>
           </v-slide-item>
         </v-slide-group>
@@ -94,10 +84,10 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop, Watch} from 'vue-property-decorator'
+import {Component, Vue, Watch} from 'vue-property-decorator'
 @Component
 export default class extends Vue {
-  @Prop({default: ''}) collectionId!: string
+  private collectionId: string = ''
   private currentImageIndex: number = 0
   private collection: any = {}
   transformImage(path: string) {
@@ -113,15 +103,20 @@ export default class extends Vue {
       this.collection = data
     })
   }
+  mounted() {
+    this.collectionId = this.$route.query.collectionId as string
+  }
   @Watch('collectionId', {immediate: true})
   watchCollectionId(val: string) {
-    this.reFindCollectionDetail()
+    val && this.reFindCollectionDetail()
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .detail {
+  width: 100%;
+  height: 100%;
   background-color: #fff;
   &__image-card {
     border-radius: 5px;
@@ -139,10 +134,10 @@ export default class extends Vue {
       }
       .silder__image {
         width: 144px;
-        height: 90px;
+        height: 88px;
         &--active {
           width: 172px;
-          height: 108px;
+          height: 107px;
           border: 2px solid #18ffff;
         }
       }

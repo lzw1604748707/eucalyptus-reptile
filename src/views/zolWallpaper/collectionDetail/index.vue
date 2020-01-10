@@ -118,6 +118,7 @@ export default class extends Vue {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  padding: 0 12px;
   &__image-card {
     border-radius: 5px;
     .card__active {
